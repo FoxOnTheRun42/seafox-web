@@ -11,7 +11,7 @@
 <link rel="preload" as="image" href="assets/video/hero-loop-poster.webp" type="image/webp" fetchpriority="high">
 <link rel="preload" as="font" href="assets/fonts/orbitron_variable.ttf" type="font/ttf" crossorigin>
 <link rel="preload" as="font" href="assets/fonts/electrolize_regular.ttf" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="css/site.css?v=11">
+<link rel="stylesheet" href="css/site.css?v=12">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <script>
 (function (d) {
@@ -55,14 +55,13 @@
   <div class="hero__shade"></div>
   <div class="wrap hero__grid">
     <div class="hero__copy">
-      <p class="eyebrow">Android-App für Boote, Alpha-Stand</p>
-      <h1 id="hero-title">Bordinstrumente, Seekarte und Ankerwache auf einem Android-Tablet.</h1>
-      <p class="lead">seaFOX liest die NMEA2000- und NMEA0183-Daten deines Bootes über das Bord-WLAN und zeigt sie als Anzeigen, die du selbst anordnest.</p>
+      <p class="hero__kicker">Android-App für Boote, Alpha-Stand</p>
+      <h1 id="hero-title">Bordinstrumente, Seekarte und Ankerwache.</h1>
+      <p class="lead">seaFOX liest die NMEA-Daten deines Bootes über das Bord-WLAN und zeigt sie auf einem Android-Tablet.</p>
       <div class="hero__cta">
         <a class="btn" href="#beta">Beta-Interesse melden</a>
-        <a class="textlink" href="#film">Film ansehen (45 s, ohne Ton)</a>
       </div>
-      <p class="small" style="margin-top:22px">Marine-Assistent in Entwicklung. Nicht für die alleinige Navigation bestimmt.</p>
+      <p class="small hero__note">Marine-Assistent in Entwicklung. Nicht für die alleinige Navigation bestimmt.</p>
     </div>
     <div class="hero__device">
       <figure class="device" id="heroDevice">
@@ -86,7 +85,7 @@
 <!-- ====================== DASHBOARD ====================== -->
 <section id="dashboard" class="pad" aria-labelledby="dash-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <h2 id="dash-title">Anzeigen, die du selbst anordnest.</h2>
       <p class="lead">Die App zeigt nur, was du eingerichtet hast. Anzeigen lassen sich verschieben, in der Größe ändern und auf mehrere Seiten verteilen.</p>
     </div>
@@ -138,7 +137,6 @@
       <div>
         <h3 class="sub">Auch hochkant</h3>
         <p class="muted">Wer das Tablet hochkant montiert, bekommt dieselbe Seite in einer eigenen Anordnung. Beim Zurückdrehen ist die Queranordnung wieder da.</p>
-        <p class="muted">Dazu zwei Erklärgrafiken zu den Anzeigen für Wind und Tiefe. Sie sind gezeichnet und laufen mit Beispielwerten, nicht mit Messdaten.</p>
       </div>
       <figure class="device device--portrait">
         <div class="device__body"><span class="device__cam"></span>
@@ -163,7 +161,7 @@
 <!-- ====================== SEEKARTE ====================== -->
 <section id="karte" class="pad" aria-labelledby="karte-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <h2 id="karte-title">Karte als Anzeige oder im Vollbild.</h2>
     </div>
 
@@ -199,7 +197,7 @@
         <p class="muted">Die Darstellung folgt nicht der amtlichen Symbolnorm und ersetzt keine amtliche Karte.</p>
       </div>
       <div>
-        <figure class="device device--portrait" id="encDevice" style="max-width:420px">
+        <figure class="device device--portrait" id="encDevice">
           <div class="device__body">
             <span class="device__cam"></span>
             <div class="device__screen">
@@ -221,7 +219,7 @@
 <!-- ====================== SICHERHEIT ====================== -->
 <section id="sicherheit" class="pad" aria-labelledby="sich-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <h2 id="sich-title">Ankerwache, AIS, Flachwasser.</h2>
       <p class="lead">Drei Alarme, die deine Wache unterstützen. Sie ersetzen sie nicht.</p>
     </div>
@@ -262,7 +260,7 @@
             <figcaption>Ankerkreis: Das Boot schwojt um den Anker. Verlässt es den Kreis, löst der Alarm aus. <b>Illustration mit Beispielwerten.</b></figcaption>
           </figure>
         </div>
-        <figure class="device device--portrait" style="margin-top:clamp(24px,3vw,40px); max-width:360px">
+        <figure class="device device--portrait">
           <div class="device__body"><span class="device__cam"></span>
             <div class="device__screen"><img class="is-active" src="assets/screens/43_page_anchor_ais_nmea_system_final_build_night.webp" width="937" height="1500" alt="Seite „Anker“ im Hochformat: Ankerwache mit Kettenlänge und Distanz, AIS-Anzeige im Alarmzustand mit STUMM-Taste. Simulatordaten." loading="lazy" decoding="async"></div>
           </div>
@@ -283,9 +281,9 @@
 <!-- ====================== SENSORIK ====================== -->
 <section id="sensorik" class="pad" aria-labelledby="sens-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <p class="kicker">Experimentell, in Entwicklung</p>
-      <h2 id="sens-title">Sehen, was unter dir liegt.</h2>
+      <h2 id="sens-title">Radar, Sonar und Bodenkarte.</h2>
       <p class="lead">Radar, Vorausschau-Sonar und eine selbst gelotete Bodenkarte sind in Arbeit. Bisher laufen sie nur mit simulierten Daten und sind an keiner echten Hardware geprüft.</p>
     </div>
 
@@ -299,6 +297,10 @@
               <img src="assets/screens/111_Q_sonar_map_fullscreen_sim_night.webp" width="1500" height="937" alt="Sonarkarte im Vollbild, Querformat: Mosaik vor dem Bootssymbol, Ebenenwahl, Werkzeugleiste, Legende und Datenfelder. Hinweis im Bild: Sonar-Simulation, keine echten Sonardaten." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulation.</b> Sonarkarte im Vollbild. Keine echten Sonardaten; die Simulation wird nicht gespeichert.">
               <img src="assets/screens/62_dialog_sensor_settings_landscape_day.webp" width="1500" height="937" alt="Dialog „Sensorik (experimentell)“: Hinweis, dass die Navigationshilfe experimentell ist; Auswahl der Rolle des Tablets: Radar und Navigation, Sonar und Bodenkarte oder nur Navigation." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme.</b> Dialog „Sensorik (experimentell)“: Die Rolle des Tablets bestimmt, welche Sensoren es verarbeitet.">
               <img src="assets/screens/123_Q_sonar_map_empty_reason_no_simulation_night.webp" width="1500" height="937" alt="Seite „Sonar“ im Querformat ohne Simulation und ohne Gerät: Kopfleiste „KEINE DATEN“, in der Sonarkarte der Hinweis „SONAR NICHT EINGERICHTET“, in der Bodenkarte „Keine Bathymetrie-Daten“." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, ohne Daten.</b> Seite „Sonar“ ohne Simulation und ohne Gerät: Die App meldet „SONAR NICHT EINGERICHTET“ und zeigt kein Bild.">
+              <!-- Weitere Queraufnahmen (z. B. die 3D-Sonaransicht, sobald es echte Aufnahmen gibt) hier anhängen:
+                   je ein <img> mit width="1500" height="937", alt und data-cap (Herkunft der Aufnahme),
+                   dazu unten in .seg je ein <button data-i="4…">. Mehr ist nicht nötig; Überblenden und Unterschrift folgen.
+                   Für einen eigenen Block: das <div class="split split--rev"> mit #scanDevice kopieren (neue ids). -->
             </div>
           </div>
           <figcaption id="sensCap"><b>App-Aufnahme, Simulation.</b> Seite „Sonar“: Sonarkarte mit Mosaik und Bodenkarte. Keine echten Sonardaten.</figcaption>
@@ -342,7 +344,7 @@
         <p class="kicker">Vorhaben, noch keine Funktion</p>
         <h3 class="sub">Scans nach Datum vergleichen</h3>
         <p class="muted">Gemessene Lotungen legt die App lokal auf dem Tablet ab. Das Ziel: Scans nach Datum ordnen und Fahrten vergleichen, um zu sehen, wie sich ein Ankerplatz oder eine Einfahrt verändert. Im Hauptstand ist dieser Vergleich noch keine Funktion; das Bild zeigt einen Entwicklungsstand mit synthetischen Vorschaudaten.</p>
-        <p class="muted">Schon heute gilt: Die App erfindet keine Daten. Gemessenes, Interpoliertes und Klassifiziertes sieht nie gleich aus. Wo nichts gemessen wurde, steht „nicht abgedeckt“. Radar-, Sonar- und Tiefendaten werden nicht hochgerechnet, aufgefüllt oder mit Fototexturen belegt. Simulierte Lotungen werden nie gespeichert.</p>
+        <p class="muted">Die App erfindet keine Daten. Gemessenes, Interpoliertes und Klassifiziertes sieht nie gleich aus. Wo nichts gemessen wurde, steht „nicht abgedeckt“. Radar-, Sonar- und Tiefendaten werden nicht hochgerechnet, aufgefüllt oder mit Fototexturen belegt. Simulierte Lotungen werden nie gespeichert.</p>
       </div>
       <div>
         <figure class="device" id="scanDevice">
@@ -365,9 +367,9 @@
 
 <!-- ====================== FÜR WEN ====================== -->
 <section id="fuer-wen" aria-labelledby="wen-title">
-  <div class="wrap" style="padding-top:clamp(88px,13vw,190px)">
-    <div class="head" data-ping>
-      <h2 id="wen-title">Drei Arten, aufs Wasser zu gehen.</h2>
+  <div class="wrap">
+    <div class="head">
+      <h2 id="wen-title">Für wen seaFOX gedacht ist.</h2>
     </div>
   </div>
 
@@ -377,7 +379,6 @@
         <source srcset="assets/img/harbour.avif" type="image/avif"><source srcset="assets/img/harbour.webp" type="image/webp">
         <img src="assets/img/harbour.jpg" width="1344" height="752" alt="Kleiner Hafen bei Nacht: Segelyachten am Steg, warme Steglampen spiegeln sich im stillen Wasser." loading="lazy" decoding="async">
       </picture>
-      <canvas class="grain" aria-hidden="true"></canvas>
     </div>
     <div class="wrap">
       <div class="panel__copy">
@@ -397,7 +398,6 @@
       <video muted playsinline preload="none" aria-hidden="true" tabindex="-1" width="1280" height="720" data-inview>
         <source data-src="assets/video/loop-research.webm" type="video/webm"><source data-src="assets/video/loop-research.mp4" type="video/mp4">
       </video>
-      <canvas class="grain" aria-hidden="true"></canvas>
     </div>
     <div class="wrap">
       <div class="panel__copy">
@@ -414,7 +414,6 @@
         <source srcset="assets/img/family.avif" type="image/avif"><source srcset="assets/img/family.webp" type="image/webp">
         <img src="assets/img/family.jpg" width="1344" height="752" alt="Ein Segelboot vor Anker in einer flachen Bucht; an Deck sitzen ein Erwachsener und zwei Kinder mit Rettungswesten hinter der Reling und schauen ins Wasser." loading="lazy" decoding="async">
       </picture>
-      <canvas class="grain" aria-hidden="true"></canvas>
     </div>
     <div class="wrap">
       <div class="panel__copy">
@@ -429,7 +428,7 @@
 <!-- ====================== OFFEN & EHRLICH ====================== -->
 <section id="ehrlich" class="pad" aria-labelledby="ehr-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <h2 id="ehr-title">Was seaFOX ist und was nicht.</h2>
     </div>
     <div class="two">
@@ -453,7 +452,7 @@
       </div>
     </div>
 
-    <div style="margin-top:clamp(64px,9vw,130px); max-width:860px">
+    <div class="note-block">
       <h3 class="sub">Deine Daten bleiben an Bord</h3>
       <p class="muted">Seiten, Anordnung und Einstellungen liegen lokal auf dem Tablet. Zugangsdaten verlassen den privaten Speicher der App nicht. Wenn du ein Backup exportierst, werden sie vorher entfernt; gelingt das nicht, wird kein Backup geschrieben.</p>
       <p class="muted">In den Einstellungen legst du fest, ob Sicherungen nur intern bleiben, von Hand exportiert werden dürfen oder das Cloud-Backup des Systems erlaubt ist.</p>
@@ -465,9 +464,9 @@
 <!-- ====================== STATUS ====================== -->
 <section id="status" class="pad" aria-labelledby="stat-title">
   <div class="wrap">
-    <div class="head" data-ping>
+    <div class="head">
       <h2 id="stat-title">Stand Oktober 2026.</h2>
-      <p class="lead">Kein Veröffentlichungstermin. Unten steht die Reihenfolge, in der gearbeitet wird.</p>
+      <p class="lead">Kein Veröffentlichungstermin. Unten steht, woran in welcher Reihenfolge gearbeitet wird.</p>
     </div>
 
     <dl class="facts">
@@ -517,10 +516,10 @@
 <section id="beta" class="pad" aria-labelledby="beta-title">
   <div class="wrap">
     <div class="box">
-      <div class="head" data-ping style="margin-bottom:0">
-          <h2 id="beta-title">Beta-Interesse</h2>
+      <div class="head">
+        <h2 id="beta-title">Beta-Interesse</h2>
         <p class="lead">Du hast ein Boot mit NMEA-Netz und ein Android-Tablet und willst eine frühe Version ausprobieren. Dann melde dich.</p>
-        <p class="small">Es gibt noch keinen Download und keinen Termin. Diese Seite sammelt keine Daten: Das Formular sendet nichts. Der Knopf öffnet einen E-Mail-Entwurf in deinem eigenen Mailprogramm; ob er dort ankommt, zeigt dir nur dein Mailprogramm.</p>
+        <p class="small">Es gibt noch keinen Download und keinen Termin. Das Formular sendet nichts: Der Knopf öffnet einen E-Mail-Entwurf in deinem eigenen Mailprogramm.</p>
       </div>
       <form id="betaForm" novalidate>
         <label>Wie bist du unterwegs?
@@ -578,6 +577,6 @@
 
 <script src="js/ocean.js?v=10" defer></script>
 <script src="js/viz.js?v=10" defer></script>
-<script src="js/site.js?v=10" defer></script>
+<script src="js/site.js?v=11" defer></script>
 </body>
 </html>
