@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04090d">
+<title>seaFOX – Bordinstrumente, Seekarte und Ankerwache für Android</title>
+<meta name="description" content="seaFOX zeigt die NMEA-Daten deines Bootes auf einem Android-Tablet: Bordinstrumente, Seekarte, Ankerwache. Alpha-Stand, kein amtliches Navigationssystem.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="assets/video/hero-poster.webp">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip" href="#dashboard">Zum Inhalt springen</a>
+<canvas id="field" aria-hidden="true"></canvas>
+
+<header class="bar">
+  <a class="mark" href="#top" aria-label="seaFOX, zum Seitenanfang">seaFOX</a>
+  <nav aria-label="Abschnitte">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#seekarte">Seekarte</a>
+    <a href="#sicherheit">Sicherheit</a>
+    <a href="#sensorik">Sensorik</a>
+    <a href="#stand">Stand</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <video id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="assets/video/hero-poster.webp" aria-hidden="true" tabindex="-1">
+      <source src="assets/video/hero.webm" type="video/webm">
+      <source src="assets/video/hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero__copy">
+    <h1 id="hero-title">Dein Boot. Ein Tablet.</h1>
+    <p>Bordinstrumente, Seekarte und Ankerwache für Android. Im Alpha-Stand.</p>
+    <a class="btn" href="#dashboard">Ansehen</a>
+  </div>
+  <p class="cap hero__cap">Stimmungsbild, generiert</p>
+  <a class="cue" href="#dashboard" aria-label="Weiter zum Dashboard"><span></span></a>
+</section>
+
+<!-- ───────── Dashboard ───────── -->
+<section class="scene" id="dashboard" data-enter="right" aria-labelledby="t-dashboard">
+  <div class="scene__head">
+    <h2 id="t-dashboard">Alles, was dein Boot sendet.</h2>
+    <p class="lede">seaFOX liest NMEA2000 und NMEA0183 über das Bord-WLAN und zeigt die Werte auf deinem Tablet.</p>
+  </div>
+  <ol class="steps">
+    <li class="step">
+      <div class="step__text"><h3>Bei Nacht</h3><p>Karte, Batterie und Wind auf einer Seite.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/65.webp" width="1500" height="937" alt="App-Aufnahme quer, Nachtdarstellung: Seite Navigation mit Karte, Batterie, Wind und Radar-Hinweis; überall das Kennzeichen SIM." decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step">
+      <div class="step__text"><h3>Bei Tag</h3><p>Dieselbe Seite in heller Darstellung.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/60.webp" width="1500" height="937" alt="App-Aufnahme quer, Tagdarstellung: Karte, Batterie, Wind und eine Radar-Anzeige mit simulierten Echos." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step">
+      <div class="step__text"><h3>Dein Aufbau</h3><p>Du wählst die Anzeigen und ordnest sie selbst an.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/63.webp" width="1500" height="937" alt="App-Aufnahme quer: Dialog Widgets mit den Einträgen Wind, Kompass, Karten, Speed, GPS und PGN Empfang." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+  </ol>
+  <details class="note">
+    <summary>Einzelheiten zum Dashboard</summary>
+    <p>Verbindung per UDP oder TCP vom WLAN-Gateway. Anzeigen lassen sich verschieben, in der Größe ändern und auf mehrere Seiten verteilen; für Quer- und Hochformat merkt sich die App je eine eigene Anordnung. Ein eingebauter Simulator liefert Werte ohne Boot – erkennbar an „SIM“ in der Kopfleiste und in jeder Anzeige.</p>
+  </details>
+</section>
+
+<!-- ───────── Seekarte ───────── -->
+<section class="scene" id="seekarte" data-enter="left" aria-labelledby="t-seekarte">
+  <div class="scene__head">
+    <h2 id="t-seekarte">Die Karte, so groß wie das Tablet.</h2>
+    <p class="lede">Als Anzeige im Dashboard oder im Vollbild, mit der MOB-Taste direkt an der Karte.</p>
+  </div>
+  <ol class="steps">
+    <li class="step">
+      <div class="step__text"><h3>Vollbild</h3><p>Die Online-Grundkarte, quer.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/64.webp" width="1500" height="937" alt="App-Aufnahme quer: Karte im Vollbild, Straße von Gibraltar, Tasten Schließen, Tag, MOB und Lotungen." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step" data-o="p">
+      <div class="step__text"><h3>Hochkant</h3><p>Vektorkarte aus einer NOAA-Zelle: Tiefenflächen, Lotungen, Tonnen.</p></div>
+      <figure class="shot shot--p">
+        <div class="device"><div class="device__screen"><img src="assets/screens/87.webp" width="937" height="1500" alt="App-Aufnahme hochkant, Tagfarben: Vektorkarte mit Tiefenflächen, Lotungen und Tonnen." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">Entwicklungsvorschau · ohne Bootsdaten</figcaption>
+      </figure>
+    </li>
+    <li class="step" data-o="p">
+      <div class="step__text"><h3>Nachtfarben</h3><p>Flaches Wasser bleibt am hellsten.</p></div>
+      <figure class="shot shot--p">
+        <div class="device"><div class="device__screen"><img src="assets/screens/90.webp" width="937" height="1500" alt="App-Aufnahme hochkant, Nachtfarben: dieselbe Vektorkarte mit dunklem Land und hellen Lotungen." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">Entwicklungsvorschau · ohne Bootsdaten</figcaption>
+      </figure>
+    </li>
+  </ol>
+  <details class="note">
+    <summary>Einzelheiten zur Seekarte</summary>
+    <p>Die Vektorkarte ist eine Entwicklungsvorschau mit der NOAA-Zelle US5MA11M (Boston Inner Harbor). Im Hauptstand der App erscheinen aus echten Kartenzellen bisher nur Punktobjekte; Flächen und Linien fehlen noch. Die Darstellung folgt keiner amtlichen Symbolnorm und ersetzt keine amtliche Seekarte. Routen-Editor und dauerhafte Track-Aufzeichnung sind noch nicht enthalten.</p>
+  </details>
+</section>
+
+<!-- ───────── Sicherheit ───────── -->
+<section class="scene" id="sicherheit" data-enter="right" data-field="ring" aria-labelledby="t-sicherheit">
+  <div class="scene__head">
+    <h2 id="t-sicherheit">Drei Alarme für die Wache.</h2>
+    <p class="lede">Ankerwache, Mindesttiefe und AIS unterstützen deinen Ausguck. Sie ersetzen ihn nicht.</p>
+  </div>
+  <ol class="steps">
+    <li class="step">
+      <div class="step__text"><h3>Ankerwache</h3><p>Kette, Distanz und der Kreis um deine Ankerposition.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/82.webp" width="1500" height="937" alt="App-Aufnahme quer: sieben Anzeigen, darunter Tiefe mit Alarmgrenze, Kompass, Wind und Ankerwache mit Kreis." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">Entwicklungsvorschau · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step" data-o="p">
+      <div class="step__text"><h3>Tiefe</h3><p>Unter deiner Mindesttiefe wechselt die Anzeige in die Alarmfarbe.</p></div>
+      <figure class="shot shot--p">
+        <div class="device"><div class="device__screen"><img src="assets/screens/32.webp" width="937" height="1500" alt="App-Aufnahme hochkant: Seite Instrumente, die Tiefenanzeige mit rotem Alarmrahmen und der Taste Stumm." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step" data-o="p">
+      <div class="step__text"><h3>AIS</h3><p>Alarm nach deinen Grenzen für CPA und TCPA.</p></div>
+      <figure class="shot shot--p">
+        <div class="device"><div class="device__screen"><img src="assets/screens/43.webp" width="937" height="1500" alt="App-Aufnahme hochkant: Seite Anker mit Ankerwache und einer AIS-Anzeige im Alarmzustand." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+  </ol>
+  <details class="note">
+    <summary>Einzelheiten zu den Alarmen</summary>
+    <p>Die Alarme werden außerhalb der Bedienoberfläche ausgewertet, damit sie bei ausgeschaltetem Bildschirm weiterlaufen. Der Dauerbetrieb auf echten Tablets ist noch nicht geprüft. Für die Aufnahme des Tiefenalarms wurde die Mindesttiefe im Simulator hochgestellt. Die Alarmseiten gibt es bisher nur als Hochkant-Aufnahmen.</p>
+  </details>
+</section>
+
+<!-- ───────── Sensorik ───────── -->
+<section class="scene" id="sensorik" data-enter="below" data-field="sweep" aria-labelledby="t-sensorik">
+  <div class="scene__head">
+    <h2 id="t-sensorik">Sehen, was unter dir liegt.</h2>
+    <p class="lede">Radar, Vorausschau-Sonar und Bodenkarte sind <span class="warn">experimentell und an Bord-Hardware ungeprüft</span>.</p>
+  </div>
+  <ol class="steps">
+    <li class="step">
+      <div class="step__text"><h3>Sonarkarte</h3><p>Was der Strahl erfasst hat, bleibt als Mosaik stehen.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/111.webp" width="1500" height="937" alt="App-Aufnahme quer: Sonarkarte im Vollbild mit Bootssymbol, Strahl, Ebenenwahl und Datenfeldern." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">App-Aufnahme · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step">
+      <div class="step__text"><h3>Bodenkarte</h3><p>Tiefen als Fläche, mit Tiefenlinien und Maßstab.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/134.webp" width="1920" height="1200" alt="App-Aufnahme quer: Bodenkarte im Vollbild, Ebene Tiefen, mit gestrichelten Tiefenlinien bei 6 und 8 Metern." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">Entwicklungsvorschau · Simulation</figcaption>
+      </figure>
+    </li>
+    <li class="step">
+      <div class="step__text"><h3>Relief</h3><p>Dieselben Tiefen in 3D. Nicht Erfasstes bleibt schraffiert.</p></div>
+      <figure class="shot">
+        <div class="device"><div class="device__screen"><img src="assets/screens/133.webp" width="1920" height="1200" alt="App-Aufnahme quer: Seite Sonar mit Vorausschau-Sonar und Bodenkarte in der 3D-Ansicht." loading="lazy" decoding="async"></div></div>
+        <figcaption class="cap">Entwicklungsvorschau · Simulation</figcaption>
+      </figure>
+    </li>
+  </ol>
+  <details class="note">
+    <summary>Einzelheiten zur Sensorik</summary>
+    <p>Alle drei Aufnahmen zeigen synthetische Daten aus dem Simulator; simulierte Lotungen werden nie gespeichert. Radar und Sonar laufen nie gleichzeitig auf einem Tablet, die Rolle legst du in den Einstellungen fest. Radar: nur Empfang, keine Steuerbefehle. Der Peilstrahl im Hintergrund dieses Abschnitts ist eine Illustration.</p>
+  </details>
+</section>
+
+<!-- ───────── Für wen ───────── -->
+<section class="moods" id="fuer-wen" aria-labelledby="t-wen">
+  <div class="moods__head">
+    <h2 id="t-wen">Für wen seaFOX gedacht ist.</h2>
+  </div>
+  <article class="mood">
+    <div class="mood__media"><img src="assets/img/sailing.webp" width="1344" height="752" alt="" loading="lazy" decoding="async"></div>
+    <div class="mood__copy"><h3>Unter Segeln</h3><p>Bootswerte, Karte und Ankerwache auf einem Tablet.</p></div>
+    <p class="cap mood__cap">Stimmungsbild, generiert</p>
+  </article>
+  <article class="mood">
+    <div class="mood__media"><video muted loop playsinline preload="none" poster="assets/img/research.webp" aria-hidden="true" tabindex="-1"><source src="assets/video/research.mp4" type="video/mp4"></video></div>
+    <div class="mood__copy"><h3>Bei der Arbeit</h3><p>Jeder Wert zeigt seine Herkunft: live, veraltet oder simuliert.</p></div>
+    <p class="cap mood__cap">Stimmungsbild, generiert</p>
+  </article>
+  <article class="mood">
+    <div class="mood__media"><video muted loop playsinline preload="none" poster="assets/img/family.webp" aria-hidden="true" tabindex="-1"><source src="assets/video/family.mp4" type="video/mp4"></video></div>
+    <div class="mood__copy"><h3>Mit Kindern</h3><p>Gemeinsam auf die Karte und die eigenen Lotungen schauen.</p></div>
+    <p class="cap mood__cap">Stimmungsbild, generiert</p>
+  </article>
+</section>
+
+<!-- ───────── Stand ───────── -->
+<section class="plain" id="stand" aria-labelledby="t-stand">
+  <div class="plain__grid">
+    <h2 id="t-stand">Ehrlich: Das ist eine Alpha.</h2>
+    <div class="plain__body">
+      <p class="statement">seaFOX ist kein amtliches Navigationssystem und nicht für die alleinige Navigation bestimmt.</p>
+      <dl class="facts">
+        <div><dt>Läuft</dt><dd>Dashboard, Seekarte und Alarme – bisher mit Simulatordaten auf einem Emulator.</dd></div>
+        <div><dt>Experimentell</dt><dd>Radar, Sonar und Bodenkarte. An keiner Bord-Hardware geprüft.</dd></div>
+        <div><dt>Offen</dt><dd>Die Abnahme auf echten Tablets. Kein Termin, kein Download.</dd></div>
+      </dl>
+      <details class="note note--flush">
+        <summary>Was du noch wissen solltest</summary>
+        <p>Wer das Boot führt, bleibt verantwortlich für Kurs, Kollisionsvermeidung, Tiefgang und Wetter. Kartendaten, GPS, AIS und Sensorwerte können unvollständig, veraltet oder gestört sein. seaFOX läuft auf Android ab Version 7.0, auf Deutsch. Seiten, Anordnung und Einstellungen bleiben lokal auf dem Tablet; nur die Online-Grundkarte lädt Kacheln aus dem Internet.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── Kontakt ───────── -->
+<section class="plain plain--end" id="kontakt" aria-labelledby="t-kontakt">
+  <div class="plain__grid">
+    <h2 id="t-kontakt">Früh dabei sein?</h2>
+    <div class="plain__body">
+      <p class="statement statement--soft">Du hast ein Boot mit NMEA-Netz und ein Android-Tablet. Dann melde dich.</p>
+      <a class="btn btn--line" href="../impressum.html">Kontakt im Impressum</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <a class="mark" href="#top">seaFOX</a>
+  <p>App-Bilder sind Aufnahmen aus einem Emulator. Tablet-Rahmen und Linienfeld: Illustration.</p>
+  <nav aria-label="Rechtliches">
+    <a href="../impressum.html">Impressum</a>
+    <a href="../datenschutz.html">Datenschutz</a>
+    <a href="../bildnachweis.html">Bildnachweis</a>
+  </nav>
+</footer>
+
+<script src="js/field.js" defer></script>
+<script src="js/site.js" defer></script>
+</body>
+</html>
