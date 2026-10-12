@@ -51,11 +51,12 @@
     ' float ca=caustic(q*3.+h*2.,uTime)*(1.-uTop);',
     ' col+=vec3(.30,.70,.85)*ca*.45;',
     ' vec3 cy=vec3(.392,.851,1.);',
-    ' float la=line*.045+major*.10;',
+    ' float quiet=mix(1.,.28,uTop);',                              // unterhalb des Heros nur noch angedeutet
+    ' float la=(line*.045+major*.10)*quiet;',
     // Sonar-Ping: Ring läuft vom Ursprung nach außen und hebt die Konturen an
     ' vec2 pp=(uPing.xy*uRes-.5*uRes)/uRes.y;float d=length(p-pp);float r=uPing.z*.55;',
     ' float ring=exp(-pow((d-r)*9.,2.))*exp(-uPing.z*.9)*step(0.,uPing.z);',
-    ' la+=ring*(.45*line+.7*major+.06);',
+    ' la+=ring*(.45*line+.7*major+.06)*quiet;',
     ' col=mix(col,cy,clamp(la,0.,1.));',
         ' float v=1.-.55*dot(uv-.5,uv-.5)*2.;col*=v;',
     ' col+=(hash(gl_FragCoord.xy+fract(uTime)*91.7)-.5)*.022;',     // Korn im Shader

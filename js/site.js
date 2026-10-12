@@ -15,6 +15,8 @@
   var $ = function (s, el) { return (el || document).querySelector(s); };
   var $$ = function (s, el) { return [].slice.call((el || document).querySelectorAll(s)); };
   var hasIO = 'IntersectionObserver' in window;
+  // Die Erklärgrafiken (viz.js) zeichnen mit den lokalen Schriften; im Seitentext braucht sie nur noch die Wortmarke.
+  try { if (document.fonts && document.fonts.load) { document.fonts.load('12px "Electrolize"'); document.fonts.load('600 12px "Orbitron"'); } } catch (e) {}
   var param = function (k) { var m = new RegExp('[?&]' + k + '=([^&#]*)').exec(location.search); return m ? decodeURIComponent(m[1]) : null; };
 
   /* ---------- Navigation ---------- */
@@ -38,7 +40,8 @@
      Der verborgene Zustand hängt an html.reveal; die Klasse wird erst gesetzt, wenn der Beobachter steht. */
   if (hasIO && !still()) {
     try {
-      var rv = $$('main > section:not(#hero) .head, .split > *, .plate, .also > *, .two > *, .note-block, .facts, .road > li, .notice, #beta form, .panel__copy, .foot > *');
+      var rv = $$('main > section:not(#hero) .head, .split > *, .plate, .also > *, .trio > div, .two > *, .facts, .road > li, .notice, details.more, .panel__copy, .foot > *');
+      rv = rv.filter(function (el) { var d = el.parentNode && el.parentNode.closest('details'); return !d; });   // Aufgeklapptes erscheint sofort
       var rio = new IntersectionObserver(function (es) {
         var n = 0;
         es.forEach(function (e) {
@@ -94,10 +97,6 @@
   }
   function choreo(y, vh) {
     if (still()) return;
-    if (heroDevice && y < vh) {           // Tablet richtet sich beim ersten Scrollen auf
-      var hp = y / vh;
-      heroDevice.style.transform = 'rotateX(' + (5 - hp * 5).toFixed(2) + 'deg) rotateY(' + (-7 + hp * 7).toFixed(2) + 'deg)';
-    }
     if (scrolly && dashDevice && window.innerWidth > 960) {     // setzt sich beim Hereinscrollen: gleichmäßiger Maßstab, keine Drehung
       var r = scrolly.getBoundingClientRect();
       var enter = clamp01((vh * 0.95 - r.top) / (vh * 0.6)), e3 = 1 - Math.pow(1 - enter, 3);
@@ -136,10 +135,11 @@
   /* ---------- Beta-Formular: sendet nichts, öffnet nur einen lokalen E-Mail-Entwurf ---------- */
   var form = $('#betaForm');
   if (form) {
-    var BETA_ADDRESS = ''; // Platzhalter – vor Veröffentlichung durch den Betreiber auszufüllen
-    if (BETA_ADDRESS) { var ph = $('#betaPh'); if (ph) ph.hidden = true; }
+    var BETA_ADDRESS = ''; // Kontaktadresse des Betreibers. Solange sie leer ist, bleiben Formular und Einladung verborgen.
+    if (BETA_ADDRESS) $$('[data-beta]').forEach(function (el) { el.hidden = false; });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (!BETA_ADDRESS) return;
       var body = 'Hallo seaFOX-Team,\n\nich interessiere mich für die Beta.\n\nUnterwegs als: ' + $('#betaArt').value + '\nBordnetz: ' + ($('#betaNetz').value || '-') + '\n';
       var a = document.createElement('a');
       a.href = 'mailto:' + BETA_ADDRESS + '?subject=' + encodeURIComponent('seaFOX Beta-Interesse') + '&body=' + encodeURIComponent(body);
