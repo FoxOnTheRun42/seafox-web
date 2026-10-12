@@ -1,0 +1,17 @@
+Fonts in this directory (unmodified copies of the files shipped by the seaFOX app,
+app/src/main/res/font/). Licence statements below are quoted from the name tables of the font files.
+
+orbitron_variable.ttf
+  Copyright 2018 The Orbitron Project Authors (https://github.com/theleagueof/orbitron),
+  with Reserved Font Name: "Orbitron".
+  This Font Software is licensed under the SIL Open Font License, Version 1.1.
+  This license is available with a FAQ at: http://scripts.sil.org/OFL
+
+electrolize_regular.ttf
+  Copyright (c) 2011, Cyreal (www.cyreal.org) with Reserved Font Name "Electrolize".
+  This Font Software is licensed under the SIL Open Font License, Version 1.1.
+  http://scripts.sil.org/OFL
+
+The full text of the SIL Open Font License 1.1 is in OFL.txt next to this file.
+The files are served unmodified (no subsetting, no WOFF2 conversion) because both fonts carry a
+Reserved Font Name.

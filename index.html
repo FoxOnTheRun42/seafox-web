@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="de" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>seaFOX – Bordinstrumente, Seekarte und Ankerwache auf einem Android-Tablet</title>
+<meta name="description" content="seaFOX ist eine Android-App für Boote: NMEA2000-Dashboard mit frei anordenbaren Anzeigen, Seekarte, AIS und Ankerwache. Radar, Vorausschau-Sonar und Bodenkarte sind experimentell. Stand: Alpha. Nicht für die alleinige Navigation bestimmt.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#061018">
+<meta name="color-scheme" content="dark">
+<link rel="preload" as="image" href="assets/video/hero-loop-poster.webp" type="image/webp" fetchpriority="high">
+<link rel="preload" as="font" href="assets/fonts/orbitron_variable.ttf" type="font/ttf" crossorigin>
+<link rel="preload" as="font" href="assets/fonts/electrolize_regular.ttf" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="css/site.css?v=11">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<script>
+(function (d) {
+  var c = d.documentElement.classList; c.remove('no-js'); c.add('js');
+  if (/[?&]capture=/.test(location.search)) { c.add('capture'); if (/capture=full/.test(location.search)) c.add('capture-full'); }
+})(document);
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+
+<canvas id="ocean" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="wordmark" href="#hero" aria-label="seaFOX, zum Seitenanfang"><span>sea<b>FOX</b></span></a>
+  <nav aria-label="Hauptnavigation">
+    <ul>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#karte">Seekarte</a></li>
+      <li><a href="#sicherheit">Sicherheit</a></li>
+      <li><a href="#sensorik">Sensorik</a></li>
+      <li><a href="#fuer-wen">Für wen</a></li>
+      <li><a href="#status">Status</a></li>
+    </ul>
+  </nav>
+  <a class="btn btn--quiet" href="#beta">Beta-Interesse</a>
+</header>
+
+<main id="main">
+
+<!-- ====================== HERO ====================== -->
+<section id="hero" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <img src="assets/video/hero-loop-poster.webp" alt="" width="1280" height="720" fetchpriority="high" decoding="async">
+    <video id="heroLoop" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" width="1280" height="720">
+      <source data-src="assets/video/hero-loop.webm" type="video/webm">
+      <source data-src="assets/video/hero-loop.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero__shade"></div>
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Android-App für Boote, Alpha-Stand</p>
+      <h1 id="hero-title">Bordinstrumente, Seekarte und Ankerwache auf einem Android-Tablet.</h1>
+      <p class="lead">seaFOX liest die NMEA2000- und NMEA0183-Daten deines Bootes über das Bord-WLAN und zeigt sie als Anzeigen, die du selbst anordnest.</p>
+      <div class="hero__cta">
+        <a class="btn" href="#beta">Beta-Interesse melden</a>
+        <a class="textlink" href="#film">Film ansehen (45 s, ohne Ton)</a>
+      </div>
+      <p class="small" style="margin-top:22px">Marine-Assistent in Entwicklung. Nicht für die alleinige Navigation bestimmt.</p>
+    </div>
+    <div class="hero__device">
+      <figure class="device" id="heroDevice">
+        <div class="device__body">
+          <span class="device__cam"></span>
+          <div class="device__screen">
+            <img class="is-active" src="assets/screens/65_dashboard_landscape_night.webp" width="1500" height="937" alt="seaFOX im Querformat, Nachtdarstellung: Seite „Navigation“ mit Karte, Batterie und Wind. Alle Werte stammen aus dem Simulator der App und sind mit SIM gekennzeichnet." fetchpriority="high" decoding="async">
+            <img src="assets/screens/60_dashboard_landscape_day.webp" width="1500" height="937" alt="Dieselbe Seite in der Tagdarstellung, zusätzlich mit Radar-Kachel (Simulation)." loading="lazy" decoding="async">
+          </div>
+        </div>
+        <figcaption><b>App-Aufnahme, Simulatordaten (SIM).</b> Das Tablet ist gezeichnet, der Bildschirminhalt ist eine unveränderte Aufnahme der App.</figcaption>
+      </figure>
+      <div class="seg" role="group" aria-label="Darstellung der Aufnahme" data-toggle="#heroDevice">
+        <button type="button" aria-pressed="true" data-i="0">Nacht</button>
+        <button type="button" aria-pressed="false" data-i="1">Tag</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DASHBOARD ====================== -->
+<section id="dashboard" class="pad" aria-labelledby="dash-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <h2 id="dash-title">Anzeigen, die du selbst anordnest.</h2>
+      <p class="lead">Die App zeigt nur, was du eingerichtet hast. Anzeigen lassen sich verschieben, in der Größe ändern und auf mehrere Seiten verteilen.</p>
+    </div>
+
+    <div class="scrolly" id="scrolly">
+      <div class="scrolly__stage">
+        <figure class="device" id="dashDevice">
+          <div class="device__body">
+            <span class="device__cam"></span>
+            <div class="device__screen">
+              <img class="is-active" src="assets/screens/65_dashboard_landscape_night.webp" width="1500" height="937" alt="Startseite „Navigation“ im Querformat, Nachtdarstellung: Karte oben, darunter Batterie, Wind und eine Radar-Kachel, die auf diesem Tablet deaktiviert ist. Simulatordaten." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulatordaten (SIM).</b> Startseite in der Nachtdarstellung.">
+              <img src="assets/screens/60_dashboard_landscape_day.webp" width="1500" height="937" alt="Startseite im Querformat, Tagdarstellung, mit Radar-Kachel. Simulatordaten." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulatordaten (SIM).</b> Startseite in der Tagdarstellung; die Radar-Kachel zeigt eine Simulation.">
+              <img src="assets/screens/82_seven_widgets_landscape_rearranged_simulator_night.webp" width="1500" height="937" alt="Entwicklungsvorschau: Seite mit sieben Anzeigen im Querformat – Tiefe, Kompass, Speed, GPS, Wind, Temperatur, Ankerwache. Simulatordaten." loading="lazy" decoding="async" data-cap="<b>Entwicklungsvorschau, Simulatordaten (SIM).</b> Seite mit sieben Anzeigen; Aufnahme aus einem Entwicklungsstand, der nicht dem Hauptstand entspricht.">
+              <img src="assets/screens/63_dialog_widget_catalog_landscape_day.webp" width="1500" height="937" alt="Dialog „Widgets“ im Querformat: Katalog der wählbaren Anzeigen, Bereich Navigation." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulatordaten (SIM).</b> Katalog der Anzeigen.">
+              <img src="assets/screens/68_dialog_router_landscape_night.webp" width="1500" height="937" alt="Dialog „WLAN Router“ im Querformat: Router-Adresse, Port, Protokoll TCP oder UDP, NMEA-Quelle Live-Daten oder Simulation." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme.</b> Dialog „WLAN Router“ mit der Wahl zwischen Live-Daten und Simulation.">
+            </div>
+          </div>
+          <figcaption id="dashCap"><b>App-Aufnahme, Simulatordaten (SIM).</b> Startseite in der Nachtdarstellung.</figcaption>
+        </figure>
+      </div>
+      <div class="scrolly__steps">
+        <article class="step is-active" data-screen="0">
+          <h3>Startseite</h3>
+          <p>Karte, Batterie, Wind: Eine neue Seite ordnet sich passend zur Bildschirmgröße an. Alles Weitere legst du selbst fest.</p>
+          <p>Das Tablet liegt an Bord meist quer. Die App merkt sich für Quer- und Hochformat je eine eigene Anordnung.</p>
+        </article>
+        <article class="step" data-screen="1">
+          <h3>Tag- und Nachtdarstellung</h3>
+          <p>Die App hat eine Tag- und eine Nachtdarstellung. Umgeschaltet wird mit der Taste „TAG“ an der Karte oder im Dialog „Darstellung“.</p>
+        </article>
+        <article class="step" data-screen="2">
+          <h3>Instrumente</h3>
+          <p>Kompass, Fahrt, Tiefe, Wind, GPS, Tanks, Batterie, Motordrehzahl, Temperatur: Der Katalog enthält 22 Anzeigen in 6 Bereichen.</p>
+          <p>Die App dekodiert 15 NMEA2000-Datensätze (PGNs) und die NMEA0183-Sätze für Position, Kurs, Fahrt, Tiefe, Wind und AIS. Angezeigt wird, was dein Bordnetz tatsächlich liefert.</p>
+        </article>
+        <article class="step" data-screen="3">
+          <h3>Katalog</h3>
+          <p>Aus dem Katalog wählst du die Anzeigen für jede Seite. Zwischen den Seiten wechselst du mit einem Wisch.</p>
+        </article>
+        <article class="step" data-screen="4">
+          <h3>Bordnetz und Simulator</h3>
+          <p>Die Daten kommen per UDP oder TCP vom WLAN-Gateway deines Bootes. Die Kopfleiste zeigt, ob sie frisch, veraltet oder gar nicht vorhanden sind.</p>
+          <p>Zum Ausprobieren ohne Boot gibt es einen eingebauten Simulator. Solange er läuft, steht in der Kopfleiste und in jeder Anzeige „SIM“.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="also">
+      <div>
+        <h3 class="sub">Auch hochkant</h3>
+        <p class="muted">Wer das Tablet hochkant montiert, bekommt dieselbe Seite in einer eigenen Anordnung. Beim Zurückdrehen ist die Queranordnung wieder da.</p>
+        <p class="muted">Dazu zwei Erklärgrafiken zu den Anzeigen für Wind und Tiefe. Sie sind gezeichnet und laufen mit Beispielwerten, nicht mit Messdaten.</p>
+      </div>
+      <figure class="device device--portrait">
+        <div class="device__body"><span class="device__cam"></span>
+          <div class="device__screen"><img class="is-active" src="assets/screens/02_default_layout_sim_night.webp" width="937" height="1500" alt="Startseite „Navigation“ im Hochformat, Nachtdarstellung: Karte oben, darunter Batterie und Wind. Simulatordaten." loading="lazy" decoding="async"></div>
+        </div>
+        <figcaption><b>App-Aufnahme, Simulatordaten (SIM).</b> Startseite im Hochformat.</figcaption>
+      </figure>
+      <div class="figs">
+        <figure class="viz">
+          <canvas data-viz="wind" width="800" height="800" role="img" aria-label="Erklärgrafik Windanzeige: Zeiger für scheinbaren und wahren Wind, Sektoren für Backbord und Steuerbord. Beispielwerte, keine Messung."></canvas>
+          <figcaption>Wind: scheinbarer (Cyan) und wahrer Wind (Messing) relativ zum Bug. <b>Illustration mit Beispielwerten.</b></figcaption>
+        </figure>
+        <figure class="viz">
+          <canvas data-viz="depth" width="800" height="800" role="img" aria-label="Erklärgrafik Tiefe: Verlauf der Tiefe mit gestrichelter Alarmgrenze. Beispielwerte, keine Messung."></canvas>
+          <figcaption>Tiefe: Verlauf und Alarmgrenze. Unterschreitet die Tiefe die Grenze, löst der Alarm aus. <b>Illustration mit Beispielwerten.</b></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== SEEKARTE ====================== -->
+<section id="karte" class="pad" aria-labelledby="karte-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <h2 id="karte-title">Karte als Anzeige oder im Vollbild.</h2>
+    </div>
+
+    <div class="split">
+      <figure class="device">
+        <div class="device__body">
+          <span class="device__cam"></span>
+          <div class="device__screen">
+            <img class="is-active" src="assets/screens/64_chart_fullscreen_landscape_day.webp" width="1500" height="937" alt="Karte im Vollbild, Querformat, Tagdarstellung: Küste mit den Tasten SCHLIESSEN, TAG, MOB und LOTUNGEN. Hinweis im Bild: Simulation, keine echten Lotungen." loading="lazy" decoding="async">
+          </div>
+        </div>
+        <figcaption><b>App-Aufnahme, Simulatordaten (SIM).</b> Karte im Vollbild mit Online-Grundkarte.</figcaption>
+      </figure>
+      <ul class="rows">
+        <li><b>Grundkarte:</b> Online-Grundkarte, darüber auf Wunsch die Seezeichen von OpenSeaMap.</li>
+        <li><b>Eigenes Schiff:</b> Position und Navigationsvektoren, AIS-Ziele auf der Karte.</li>
+        <li><b>MOB:</b> Die Mann-über-Bord-Taste liegt direkt an der Karte.</li>
+        <li><b>Eigene Lotungen (experimentell):</b> selbst gemessene Tiefen als Ebene über der Karte.</li>
+        <li><b>Noch nicht enthalten:</b> ein Routen-Editor und eine dauerhafte Track-Aufzeichnung.</li>
+      </ul>
+    </div>
+
+    <div class="notice" role="note">
+      <p><strong>Sicherheitshinweis.</strong> seaFOX ist nicht für die alleinige Navigation bestimmt. Die App ist ein Marine-Assistent, kein amtliches Navigationssystem und kein Ersatz für amtliche Seekarten, Ausguck und Seemannschaft. Kartendaten, GPS, AIS und Sensorwerte können unvollständig, veraltet oder gestört sein. Prüfe kritische Entscheidungen mit geeigneten, aktuellen Navigationsmitteln.</p>
+    </div>
+
+    <div class="split split--rev">
+      <div>
+        <p class="kicker">In Entwicklung</p>
+        <h3 class="sub">Vektorkarten im Format S-57 (ENC)</h3>
+        <p class="muted">In Arbeit ist die Darstellung von Tiefenflächen, Tiefenlinien, Lotungen, Tonnen und Gefahrenstellen, bei Tag und bei Nacht. Die Karte darf an Bord auch hochkant stehen; die Vorschau zeigt sie so.</p>
+        <p class="muted">Im aktuellen Hauptstand der App werden echte Kartenzellen noch nicht vollständig gezeichnet: Flächen und Linien fehlen, es erscheinen nur Punktobjekte. Deshalb steht hier eine Vorschau und kein Produktbild.</p>
+        <p class="muted">Die Darstellung folgt nicht der amtlichen Symbolnorm und ersetzt keine amtliche Karte.</p>
+      </div>
+      <div>
+        <figure class="device device--portrait" id="encDevice" style="max-width:420px">
+          <div class="device__body">
+            <span class="device__cam"></span>
+            <div class="device__screen">
+              <img class="is-active" src="assets/screens/87_chart_noaa_day_zoom14.webp" width="937" height="1500" alt="Entwicklungsvorschau, Hochformat: Vektorkarte einer amtlichen US-Kartenzelle am Tag mit Tiefenflächen, Lotungen, Tonnen und Gefahrenstellen." loading="lazy" decoding="async">
+              <img src="assets/screens/90_chart_noaa_night_zoom14.webp" width="937" height="1500" alt="Entwicklungsvorschau, Hochformat: dieselbe Kartenzelle in Nachtfarben." loading="lazy" decoding="async">
+            </div>
+          </div>
+          <figcaption><b>Entwicklungsvorschau.</b> Aufnahme aus einem Entwicklungsstand, der noch nicht im Hauptstand der App enthalten ist. Kartendaten: NOAA-ENC-Zelle US5MA11M (Boston Inner Harbor), ohne Bootsdaten.</figcaption>
+        </figure>
+        <div class="seg" role="group" aria-label="Darstellung der Vorschau" data-toggle="#encDevice">
+          <button type="button" aria-pressed="true" data-i="0">Tag</button>
+          <button type="button" aria-pressed="false" data-i="1">Nacht</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== SICHERHEIT ====================== -->
+<section id="sicherheit" class="pad" aria-labelledby="sich-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <h2 id="sich-title">Ankerwache, AIS, Flachwasser.</h2>
+      <p class="lead">Drei Alarme, die deine Wache unterstützen. Sie ersetzen sie nicht.</p>
+    </div>
+
+    <div class="split split--rev">
+      <dl class="rows">
+        <div>
+          <dt>Ankerwache</dt>
+          <dd>Überwacht den Abstand zur Ankerposition. „OK“ meldet die App nur mit gesetztem Anker und frischer Position. Sonst zeigt sie, dass die Position veraltet ist oder fehlt.</dd>
+        </div>
+        <div>
+          <dt>AIS</dt>
+          <dd>Empfängt Positionsmeldungen der Klassen A und B aus dem Bordnetz und warnt nach einstellbaren Grenzen für Abstand (CPA) und Zeit (TCPA) bis zur dichtesten Annäherung.</dd>
+        </div>
+        <div>
+          <dt>Flachwasser</dt>
+          <dd>Tiefenalarm mit eigener Mindesttiefe. Stummschalten direkt an der Anzeige.</dd>
+        </div>
+        <div>
+          <dt>Bei ausgeschaltetem Bildschirm</dt>
+          <dd>Die Alarme werden außerhalb der Bedienoberfläche ausgewertet, damit sie bei ausgeschaltetem Bildschirm weiterlaufen.
+            <span class="small">Noch nicht nachgewiesen: Dauerbetrieb auf echten Tablets, auch gegen die Akkusparfunktionen der Hersteller.</span></dd>
+        </div>
+        <div>
+          <dt>Autopilot</dt>
+          <dd>Befehle laufen nur über eine Sicherheitsschranke mit bewusster Freigabe; die App meldet zurück, ob der Versand gelang. Im Simulator ist der Versand gesperrt.
+            <span class="small">An echten Autopiloten ist die Anbindung noch nicht geprüft.</span></dd>
+        </div>
+      </dl>
+      <div>
+        <div class="figs">
+          <figure class="viz">
+            <canvas data-viz="ais" width="800" height="800" role="img" aria-label="Erklärgrafik: AIS-Ziele um das eigene Schiff mit Kursvektoren und der Linie zum Punkt der dichtesten Annäherung. Beispielwerte, keine Messung."></canvas>
+            <figcaption>CPA und TCPA: Der Punkt markiert, wo ein Ziel dem eigenen Schiff am nächsten kommt. <b>Illustration mit Beispielwerten.</b></figcaption>
+          </figure>
+          <figure class="viz">
+            <canvas data-viz="anchor" width="800" height="800" role="img" aria-label="Erklärgrafik: Boot schwojt innerhalb eines Ankerkreises. Beispielwerte, keine Messung."></canvas>
+            <figcaption>Ankerkreis: Das Boot schwojt um den Anker. Verlässt es den Kreis, löst der Alarm aus. <b>Illustration mit Beispielwerten.</b></figcaption>
+          </figure>
+        </div>
+        <figure class="device device--portrait" style="margin-top:clamp(24px,3vw,40px); max-width:360px">
+          <div class="device__body"><span class="device__cam"></span>
+            <div class="device__screen"><img class="is-active" src="assets/screens/43_page_anchor_ais_nmea_system_final_build_night.webp" width="937" height="1500" alt="Seite „Anker“ im Hochformat: Ankerwache mit Kettenlänge und Distanz, AIS-Anzeige im Alarmzustand mit STUMM-Taste. Simulatordaten." loading="lazy" decoding="async"></div>
+          </div>
+          <figcaption><b>App-Aufnahme, hochkant, Simulatordaten (SIM).</b> Ankerwache und AIS-Alarm aus simulierten Werten. Eine Queraufnahme dieser Seite gibt es noch nicht.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <figure class="plate">
+      <a href="assets/screens/plate-sicherheit-2400.webp">
+        <img src="assets/screens/plate-sicherheit-1200.webp" srcset="assets/screens/plate-sicherheit-1200.webp 1200w, assets/screens/plate-sicherheit-2400.webp 2400w" sizes="(max-width: 1400px) 92vw, 1320px" width="2400" height="1580" alt="Tafel „Sicherheit“ aus App-Aufnahmen: links hochkant die Seite „Instrumente“ mit ausgelöstem Tiefenalarm. Rechts oben vier Ausschnitte der Kopfleiste mit den Zuständen LIVE, SIM, VERALTET und KEINE DATEN. Rechts unten drei Ausschnitte: Tiefenanzeige im Alarmzustand mit STUMM-Taste, Ankerwache im Zustand OK, AIS-Anzeige im Alarmzustand. Aufschrift der Tafel: Simulation und Testeinspeisung, an Bord-Hardware ungeprüft." loading="lazy" decoding="async">
+      </a>
+      <figcaption><b>Tafel aus App-Aufnahmen, Simulation und Testeinspeisung.</b> Emulator-Aufnahmen vom 12.10.2026. Links die Seite „Instrumente“ hochkant mit Tiefenalarm; dafür wurde die Mindesttiefe im Simulator hochgestellt. Rechts Ausschnitte: die vier Zustände der Kopfleiste (LIVE aus synthetischen Testwerten über den Empfangsweg der App, SIM, VERALTET, KEINE DATEN) sowie Tiefenalarm, Ankerwache und AIS-Alarm aus simulierten Werten. Das Tablet ist gezeichnet. Ein Klick öffnet die Tafel in voller Größe.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ====================== SENSORIK ====================== -->
+<section id="sensorik" class="pad" aria-labelledby="sens-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <p class="kicker">Experimentell, in Entwicklung</p>
+      <h2 id="sens-title">Sehen, was unter dir liegt.</h2>
+      <p class="lead">Radar, Vorausschau-Sonar und eine selbst gelotete Bodenkarte sind in Arbeit. Bisher laufen sie nur mit simulierten Daten und sind an keiner echten Hardware geprüft.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <figure class="device" id="sensDevice">
+          <div class="device__body">
+            <span class="device__cam"></span>
+            <div class="device__screen">
+              <img class="is-active" src="assets/screens/110_Q_sonar_map_and_bottom_map_widgets_sim_night.webp" width="1500" height="937" alt="Seite „Sonar“ im Querformat: links die Sonarkarte mit dem aufgezeichneten Mosaik vor dem Bootssymbol, rechts die Bodenkarte mit Ebenenwahl und Tiefenskala. Hinweise im Bild: SIM, experimentelle Navigationshilfe, Lotungen werden nicht gespeichert." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulation.</b> Seite „Sonar“: Sonarkarte mit Mosaik und Bodenkarte. Keine echten Sonardaten.">
+              <img src="assets/screens/111_Q_sonar_map_fullscreen_sim_night.webp" width="1500" height="937" alt="Sonarkarte im Vollbild, Querformat: Mosaik vor dem Bootssymbol, Ebenenwahl, Werkzeugleiste, Legende und Datenfelder. Hinweis im Bild: Sonar-Simulation, keine echten Sonardaten." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulation.</b> Sonarkarte im Vollbild. Keine echten Sonardaten; die Simulation wird nicht gespeichert.">
+              <img src="assets/screens/62_dialog_sensor_settings_landscape_day.webp" width="1500" height="937" alt="Dialog „Sensorik (experimentell)“: Hinweis, dass die Navigationshilfe experimentell ist; Auswahl der Rolle des Tablets: Radar und Navigation, Sonar und Bodenkarte oder nur Navigation." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme.</b> Dialog „Sensorik (experimentell)“: Die Rolle des Tablets bestimmt, welche Sensoren es verarbeitet.">
+              <img src="assets/screens/123_Q_sonar_map_empty_reason_no_simulation_night.webp" width="1500" height="937" alt="Seite „Sonar“ im Querformat ohne Simulation und ohne Gerät: Kopfleiste „KEINE DATEN“, in der Sonarkarte der Hinweis „SONAR NICHT EINGERICHTET“, in der Bodenkarte „Keine Bathymetrie-Daten“." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, ohne Daten.</b> Seite „Sonar“ ohne Simulation und ohne Gerät: Die App meldet „SONAR NICHT EINGERICHTET“ und zeigt kein Bild.">
+            </div>
+          </div>
+          <figcaption id="sensCap"><b>App-Aufnahme, Simulation.</b> Seite „Sonar“: Sonarkarte mit Mosaik und Bodenkarte. Keine echten Sonardaten.</figcaption>
+        </figure>
+        <div class="seg" role="group" aria-label="Aufnahme wählen" data-toggle="#sensDevice" data-caption="#sensCap">
+          <button type="button" aria-pressed="true" data-i="0">Sonar und Bodenkarte</button>
+          <button type="button" aria-pressed="false" data-i="1">Sonarkarte im Vollbild</button>
+          <button type="button" aria-pressed="false" data-i="2">Rolle des Tablets</button>
+          <button type="button" aria-pressed="false" data-i="3">Ohne Sonar</button>
+        </div>
+      </div>
+      <dl class="rows">
+        <div>
+          <dt>Radar</dt>
+          <dd>Rundsicht mit Entfernungsringen. Nur Empfang: Die App sendet keine Steuerbefehle an das Radar.</dd>
+        </div>
+        <div>
+          <dt>Vorausschau-Sonar</dt>
+          <dd>Ein Sektor vor dem Bug mit Rückstreubild und Tiefenskala.</dd>
+        </div>
+        <div>
+          <dt>Bodenkarte</dt>
+          <dd>Aus eigenen Lotungen entsteht Zelle für Zelle ein Tiefenbild, mit Ebenen für Tiefenzellen, Konturen, Tiefenwerte und Unsicherheit.</dd>
+        </div>
+        <div>
+          <dt>Eine Rolle je Tablet</dt>
+          <dd>Radar und Sonar laufen nie gleichzeitig auf einem Gerät. Welche Sensoren ein Tablet verarbeitet, legst du in den Einstellungen fest.</dd>
+        </div>
+      </dl>
+    </div>
+
+    <figure class="plate">
+      <a href="assets/screens/plate-sensorik-2400.webp">
+        <img src="assets/screens/plate-sensorik-1200.webp" srcset="assets/screens/plate-sensorik-1200.webp 1200w, assets/screens/plate-sensorik-2400.webp 2400w" sizes="(max-width: 1400px) 92vw, 1320px" width="2400" height="1580" alt="Tafel „Sensorik, experimentell“ aus drei App-Aufnahmen: links im Querformat die Seite „Sonar“ mit Sonarkarte und Bodenkarte, in der Mitte hochkant das Radar im Vollbild mit simulierten Echos, rechts hochkant das Vorausschau-Sonar mit einem Sektor von plus/minus 10 Grad bis 30 Meter. Aufschrift der Tafel: Simulation, an Hardware ungeprüft; kein Bild zeigt ein echtes Gerät." loading="lazy" decoding="async">
+      </a>
+      <figcaption><b>Tafel aus App-Aufnahmen, Simulation.</b> Emulator-Aufnahmen vom 12.10.2026: Sonarkarte und Bodenkarte (quer), Radar im Vollbild und Vorausschau-Sonar (beide hochkant). <b>Entwicklungsvorschau:</b> Die Aufnahme des Vorausschau-Sonars stammt aus einer Demo-Kopie der App, nicht aus dem Hauptstand. Keine echten Radar- oder Sonardaten. Die Tablets sind gezeichnet. Ein Klick öffnet die Tafel in voller Größe.</figcaption>
+    </figure>
+
+    <div class="split split--rev">
+      <div>
+        <p class="kicker">Vorhaben, noch keine Funktion</p>
+        <h3 class="sub">Scans nach Datum vergleichen</h3>
+        <p class="muted">Gemessene Lotungen legt die App lokal auf dem Tablet ab. Das Ziel: Scans nach Datum ordnen und Fahrten vergleichen, um zu sehen, wie sich ein Ankerplatz oder eine Einfahrt verändert. Im Hauptstand ist dieser Vergleich noch keine Funktion; das Bild zeigt einen Entwicklungsstand mit synthetischen Vorschaudaten.</p>
+        <p class="muted">Schon heute gilt: Die App erfindet keine Daten. Gemessenes, Interpoliertes und Klassifiziertes sieht nie gleich aus. Wo nichts gemessen wurde, steht „nicht abgedeckt“. Radar-, Sonar- und Tiefendaten werden nicht hochgerechnet, aufgefüllt oder mit Fototexturen belegt. Simulierte Lotungen werden nie gespeichert.</p>
+      </div>
+      <div>
+        <figure class="device" id="scanDevice">
+          <div class="device__body"><span class="device__cam"></span>
+            <div class="device__screen">
+              <img class="is-active" src="assets/screens/120_Q_compare_differenz_PREVIEW_DATA_night.webp" width="1500" height="937" alt="Entwicklungsvorschau im Querformat: Vergleich zweier Scans in der Ansicht „Differenz“ mit Legende für geänderte und unveränderte Flächen sowie Flächen, die nur in einem der beiden Scans liegen." loading="lazy" decoding="async" data-cap="<b>Entwicklungsvorschau mit synthetischen Vorschaudaten.</b> Vergleich zweier Scans, Ansicht „Differenz“. Im Hauptstand der App gibt es heute nur den einen laufenden Scan; Liste und Vergleich sind dort noch gesperrt.">
+              <img src="assets/screens/112_Q_scans_dialog_live_adapter_sim_night.webp" width="1500" height="937" alt="Dialog „Sonar-Scans“ im Querformat: ein laufender Scan aus der Simulation mit dem Vermerk „wird nicht gespeichert“; „Neuer Scan“ und „Vergleichen“ sind gesperrt mit dem Hinweis „wartet auf Scan-Archiv“; darunter „Noch keine gespeicherten Scans“." loading="lazy" decoding="async" data-cap="<b>App-Aufnahme, Simulation.</b> Dialog „Sonar-Scans“ im Hauptstand: ein laufender Scan aus der Simulation, nichts gespeichert, Liste und Vergleich gesperrt („wartet auf Scan-Archiv“).">
+            </div>
+          </div>
+          <figcaption id="scanCap"><b>Entwicklungsvorschau mit synthetischen Vorschaudaten.</b> Vergleich zweier Scans, Ansicht „Differenz“. Im Hauptstand der App gibt es heute nur den einen laufenden Scan; Liste und Vergleich sind dort noch gesperrt.</figcaption>
+        </figure>
+        <div class="seg" role="group" aria-label="Aufnahme wählen" data-toggle="#scanDevice" data-caption="#scanCap">
+          <button type="button" aria-pressed="true" data-i="0">Vorschau: Differenz</button>
+          <button type="button" aria-pressed="false" data-i="1">Heute: Scan-Dialog</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FÜR WEN ====================== -->
+<section id="fuer-wen" aria-labelledby="wen-title">
+  <div class="wrap" style="padding-top:clamp(88px,13vw,190px)">
+    <div class="head" data-ping>
+      <h2 id="wen-title">Drei Arten, aufs Wasser zu gehen.</h2>
+    </div>
+  </div>
+
+  <article class="panel" data-panel>
+    <div class="panel__media">
+      <picture>
+        <source srcset="assets/img/harbour.avif" type="image/avif"><source srcset="assets/img/harbour.webp" type="image/webp">
+        <img src="assets/img/harbour.jpg" width="1344" height="752" alt="Kleiner Hafen bei Nacht: Segelyachten am Steg, warme Steglampen spiegeln sich im stillen Wasser." loading="lazy" decoding="async">
+      </picture>
+      <canvas class="grain" aria-hidden="true"></canvas>
+    </div>
+    <div class="wrap">
+      <div class="panel__copy">
+        <h3>Fahrtensegler</h3>
+        <p>Die Werte des Bootes, die Karte daneben, die Ankerwache für die Nacht. Auf einem Tablet, das ohnehin an Bord ist.</p>
+      </div>
+    </div>
+    <span class="panel__credit">Stimmungsbild, KI-generiert</span>
+  </article>
+
+  <article class="panel" data-panel>
+    <div class="panel__media">
+      <picture>
+        <source srcset="assets/img/research.avif" type="image/avif"><source srcset="assets/img/research.webp" type="image/webp">
+        <img src="assets/img/research.jpg" width="1344" height="752" alt="Drei Personen in Wetterjacken arbeiten auf dem Achterdeck eines kleinen Forschungsbootes und fieren einen Wasserschöpfer an einem Kran zu Wasser." loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline preload="none" aria-hidden="true" tabindex="-1" width="1280" height="720" data-inview>
+        <source data-src="assets/video/loop-research.webm" type="video/webm"><source data-src="assets/video/loop-research.mp4" type="video/mp4">
+      </video>
+      <canvas class="grain" aria-hidden="true"></canvas>
+    </div>
+    <div class="wrap">
+      <div class="panel__copy">
+        <h3>Forschung und Vermessung</h3>
+        <p>Die Herkunft jedes Sensorwerts bleibt sichtbar, Simuliertes ist gekennzeichnet, Fehlendes bleibt leer. Die Sensorik ist experimentell: ein Werkzeug zum Mitentwickeln, kein Vermessungsgerät.</p>
+      </div>
+    </div>
+    <span class="panel__credit">Stimmungsbild, KI-generiert</span>
+  </article>
+
+  <article class="panel" data-panel>
+    <div class="panel__media">
+      <picture>
+        <source srcset="assets/img/family.avif" type="image/avif"><source srcset="assets/img/family.webp" type="image/webp">
+        <img src="assets/img/family.jpg" width="1344" height="752" alt="Ein Segelboot vor Anker in einer flachen Bucht; an Deck sitzen ein Erwachsener und zwei Kinder mit Rettungswesten hinter der Reling und schauen ins Wasser." loading="lazy" decoding="async">
+      </picture>
+      <canvas class="grain" aria-hidden="true"></canvas>
+    </div>
+    <div class="wrap">
+      <div class="panel__copy">
+        <h3>Familien</h3>
+        <p>Ihr seht die Karte und die eigenen Lotungen unter dem Boot, experimentell auch das Sonarbild. Die App erkennt nicht, woraus der Grund besteht.</p>
+      </div>
+    </div>
+    <span class="panel__credit">Stimmungsbild, KI-generiert</span>
+  </article>
+</section>
+
+<!-- ====================== OFFEN & EHRLICH ====================== -->
+<section id="ehrlich" class="pad" aria-labelledby="ehr-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <h2 id="ehr-title">Was seaFOX ist und was nicht.</h2>
+    </div>
+    <div class="two">
+      <div>
+        <h3>seaFOX ist</h3>
+        <ul class="rows">
+          <li><b>ein Marine-Assistent</b> für Dashboard, Sensoranzeige, Kartenansicht und Navigationsunterstützung.</li>
+          <li><b>eine Android-App</b>, die Daten aus dem NMEA-Netz deines Bootes per WLAN empfängt.</li>
+          <li><b>für den Bordbetrieb gedacht:</b> Die Instrumente brauchen kein Internet, nur dein Bordnetz.</li>
+          <li><b>deutlich in der Kennzeichnung:</b> Simuliertes heißt „SIM“, Veraltetes „veraltet“, Fehlendes bleibt leer.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>seaFOX ist nicht</h3>
+        <ul class="rows">
+          <li><b>kein amtliches Navigationssystem</b> und kein Ersatz für amtliche Seekarten.</li>
+          <li><b>kein Ersatz für Ausguck,</b> Seemannschaft und eigenverantwortliche Schiffsführung.</li>
+          <li><b>nicht fertig:</b> Alpha-Stand, auf echter Bord-Hardware noch nicht nachgewiesen.</li>
+          <li><b>kein Vermessungs- oder Radargerät:</b> Radar, Sonar und Bodenkarte sind experimentell und bisher nur simuliert.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(64px,9vw,130px); max-width:860px">
+      <h3 class="sub">Deine Daten bleiben an Bord</h3>
+      <p class="muted">Seiten, Anordnung und Einstellungen liegen lokal auf dem Tablet. Zugangsdaten verlassen den privaten Speicher der App nicht. Wenn du ein Backup exportierst, werden sie vorher entfernt; gelingt das nicht, wird kein Backup geschrieben.</p>
+      <p class="muted">In den Einstellungen legst du fest, ob Sicherungen nur intern bleiben, von Hand exportiert werden dürfen oder das Cloud-Backup des Systems erlaubt ist.</p>
+      <p class="small">Die Online-Grundkarte lädt Kartenkacheln aus dem Internet, sobald eine Verbindung besteht. Die Datenschutzerklärung der App ist noch ein Entwurf.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== STATUS ====================== -->
+<section id="status" class="pad" aria-labelledby="stat-title">
+  <div class="wrap">
+    <div class="head" data-ping>
+      <h2 id="stat-title">Stand Oktober 2026.</h2>
+      <p class="lead">Kein Veröffentlichungstermin. Unten steht die Reihenfolge, in der gearbeitet wird.</p>
+    </div>
+
+    <dl class="facts">
+      <div><dt>Entwicklungsstand</dt><dd>Alpha</dd></div>
+      <div><dt>Geprüft</dt><dd>Über 750 automatisierte Tests der App-Logik; eine Abnahme der Oberfläche auf einem Emulator.</dd></div>
+      <div><dt>Nicht geprüft</dt><dd>Echte Tablets, Bord-Hardware, Radar, Sonar, Autopilot.</dd></div>
+      <div><dt>System</dt><dd>Android ab Version 7.0</dd></div>
+      <div><dt>Sprache</dt><dd>Deutsch</dd></div>
+      <div><dt>Download</dt><dd>Noch keiner.</dd></div>
+    </dl>
+
+    <ol class="road">
+      <li>
+        <h3>Zuerst: Verlässlichkeit</h3>
+        <ul class="rows">
+          <li>Vektorkarten vollständig darstellen: Flächen, Linien, alle Lotungen</li>
+          <li>Herkunft der Position kennzeichnen, wenn das Tablet-GPS einspringt</li>
+          <li>Alarme im Dauerbetrieb absichern</li>
+          <li>Abnahme auf echten Tablets und an Bord</li>
+          <li>Radar, Sonar und Autopilot an Geräten validieren</li>
+        </ul>
+      </li>
+      <li>
+        <h3>Danach: Funktionen</h3>
+        <ul class="rows">
+          <li>Routen anlegen, bearbeiten, importieren</li>
+          <li>Track aufzeichnen und exportieren</li>
+          <li>Sicherheitstiefenlinie auf der Karte</li>
+          <li>Demo-Fahrt mit wechselnder Tiefe für die Bodenkarte</li>
+        </ul>
+      </li>
+      <li>
+        <h3>Offene Entscheidungen</h3>
+        <ul class="rows">
+          <li>Umfang der ersten Beta</li>
+          <li>Erste rechtlich saubere Offline-Kartenquelle</li>
+          <li>Weitere Sprachen</li>
+          <li>Austausch von Lotungen zwischen mehreren Tablets</li>
+          <li>Endgültige Sicherheits- und Datenschutztexte</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ====================== BETA ====================== -->
+<section id="beta" class="pad" aria-labelledby="beta-title">
+  <div class="wrap">
+    <div class="box">
+      <div class="head" data-ping style="margin-bottom:0">
+          <h2 id="beta-title">Beta-Interesse</h2>
+        <p class="lead">Du hast ein Boot mit NMEA-Netz und ein Android-Tablet und willst eine frühe Version ausprobieren. Dann melde dich.</p>
+        <p class="small">Es gibt noch keinen Download und keinen Termin. Diese Seite sammelt keine Daten: Das Formular sendet nichts. Der Knopf öffnet einen E-Mail-Entwurf in deinem eigenen Mailprogramm; ob er dort ankommt, zeigt dir nur dein Mailprogramm.</p>
+      </div>
+      <form id="betaForm" novalidate>
+        <label>Wie bist du unterwegs?
+          <select name="art" id="betaArt">
+            <option>Fahrtensegeln</option>
+            <option>Motorboot</option>
+            <option>Forschung / Vermessung</option>
+            <option>Familie / Freizeit</option>
+            <option>Etwas anderes</option>
+          </select>
+        </label>
+        <label>Dein Bordnetz (freiwillig)
+          <input type="text" name="netz" id="betaNetz" autocomplete="off" placeholder="z. B. NMEA2000 mit WLAN-Gateway">
+        </label>
+        <p class="ph" id="betaPh">Platzhalter – vor Veröffentlichung durch den Betreiber auszufüllen: Die Kontaktadresse fehlt noch. Bis dahin entsteht ein Entwurf ohne Empfänger.</p>
+        <div><button class="btn" type="submit">E-Mail-Entwurf öffnen</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h2>Sicherheitshinweis</h2>
+        <p class="safety">seaFOX ist nicht für die alleinige Navigation bestimmt. Verwende die App nur zusammen mit geeigneten, aktuellen Navigationsmitteln. Wer das Boot führt, bleibt für Kurs, Kollisionsvermeidung, Tiefgang, Wetter, lokale Regeln und sichere Schiffsführung verantwortlich. Radar, Vorausschau-Sonar und Bodenkarte sind experimentell und an keiner echten Hardware geprüft.</p>
+      </div>
+      <div>
+        <h2>Seite</h2>
+        <ul>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#karte">Seekarte</a></li>
+          <li><a href="#sicherheit">Sicherheit</a></li>
+          <li><a href="#sensorik">Sensorik</a></li>
+          <li><a href="#status">Status</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Rechtliches</h2>
+        <ul>
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+          <li><a href="bildnachweis.html">Bild- und Schriftnachweis</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legalline">
+      <p>seaFOX, Android-App für Boote, Alpha-Stand. App-Bilder: unveränderte Aufnahmen mit Simulatordaten. Stimmungsbilder: KI-generiert. Grafiken: Illustrationen mit Beispielwerten.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/ocean.js?v=10" defer></script>
+<script src="js/viz.js?v=10" defer></script>
+<script src="js/site.js?v=10" defer></script>
+</body>
+</html>
