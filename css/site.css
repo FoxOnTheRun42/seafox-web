@@ -189,8 +189,9 @@ details.more[open] > summary { margin-bottom: var(--s-3); }
 .device--portrait .device__screen { aspect-ratio: 937 / 1500; border-radius: 1.8cqw; }
 .device figcaption, .caption { margin-top: 14px; font-size: var(--fs-0); line-height: 1.5; color: var(--text-3); max-width: 64ch; transition: opacity var(--dur-1) var(--ease); }
 .device figcaption.is-swapping { opacity: 0; }
-/* Hochkant-Aufnahmen sind Nebenbilder: klein, wo es denselben Punkt auch quer gibt */
-.device--minor { max-width: 220px; width: 100%; }
+/* Hochkant-Aufnahmen: lesbare Größe, aber schmaler als die Queraufnahmen */
+.device--minor { max-width: 320px; width: 100%; }
+#encDevice { max-width: 420px; }
 .figs + .device { margin-top: var(--s-4); }
 .device figcaption b, .caption b { color: var(--brass); font-weight: 400; }
 
@@ -212,13 +213,14 @@ details.more[open] > summary { margin-bottom: var(--s-3); }
 .hero__copy h1 { max-width: 13em; }
 .hero__copy .lead { margin: 20px 0 30px; font-size: 1.0625rem; line-height: 1.6; color: #d3e2ec; max-width: 38ch; }
 .hero__note { margin: 22px 0 0; max-width: 44ch; }
+.hero__device { perspective: 1800px; }
+.hero__device .device { transform-origin: 50% 80%; }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }
 @media (max-width: 960px) { .hero__grid { grid-template-columns: 1fr; padding-top: calc(var(--nav-h) + 40px); } }
 
 /* ---------- Dashboard: Tablet bleibt stehen, Text läuft, Bildschirm folgt ---------- */
 .scrolly { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: var(--s-5); align-items: start; }
-.scrolly__stage { position: sticky; top: calc(var(--nav-h) + 4 * var(--vh)); height: calc(92 * var(--vh) - var(--nav-h)); display: grid; align-content: center; order: 2; }
-.scrolly__stage .device { transform-origin: 50% 60%; }
+.scrolly__stage { position: sticky; top: calc(var(--nav-h) + 4 * var(--vh)); height: calc(92 * var(--vh) - var(--nav-h)); display: grid; align-content: center; perspective: 1800px; order: 2; }
 /* Schmale Linie neben den Schritten; sie füllt sich mit dem Scrollen (--p setzt site.js, ohne JS bleibt die Haarlinie) */
 .scrolly__steps { position: relative; padding-right: var(--s-4); border-right: 1px solid var(--line); }
 .scrolly__steps::before { content: ""; position: absolute; right: -1px; top: 0; bottom: 0; width: 1px; background: var(--cyan); transform: scaleY(var(--p, 0)); transform-origin: 50% 0; }
@@ -232,16 +234,16 @@ details.more[open] > summary { margin-bottom: var(--s-3); }
   .scrolly__steps { padding-right: 0; border-right: 0; }
   .scrolly__steps::before { display: none; }
   /* Tablet bleibt oben stehen und nimmt mit Unterschrift höchstens rund 38 % der Höhe ein */
-  .scrolly__stage { order: 0; top: var(--nav-h); height: auto; z-index: 1; padding: 10px 0 10px; background: var(--ocean); border-bottom: 1px solid var(--line); }
-  .scrolly__stage .device { width: min(100%, calc(27 * var(--vh) * 1.6)); margin-inline: auto; }
-  .scrolly__stage figcaption { min-height: 3em; margin-top: 8px; font-size: 0.8125rem; line-height: 1.45; }
+  /* Tablet bleibt oben stehen, füllt die Spalte an der linken Inhaltskante; die Fläche dahinter reicht über die ganze Breite */
+  .scrolly__stage { order: 0; top: var(--nav-h); height: auto; z-index: 1; padding: 12px 0 10px; background: var(--ocean); box-shadow: 0 0 0 100vmax var(--ocean); clip-path: inset(0 -100vmax); perspective: none; }
+  .scrolly__stage .device { width: min(100%, calc(46 * var(--vh) * 1.6)); }
+  .scrolly__stage figcaption { min-height: 0; margin-top: 8px; font-size: 0.8125rem; line-height: 1.45; }
   .step { min-height: 0; padding-block: var(--s-4); justify-content: flex-start; }
-  .step:last-child { padding-bottom: calc(30 * var(--vh)); }
 }
 
-.also { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 220px); gap: var(--s-5); align-items: start; max-width: 1000px; margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px solid var(--line); }
+.also { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 300px); gap: var(--s-5); align-items: start; max-width: 1120px; margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px solid var(--line); }
 .figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
-@media (max-width: 720px) { .also { grid-template-columns: 1fr 1fr; gap: var(--s-3); } }
+@media (max-width: 720px) { .also { grid-template-columns: 1fr 1fr; gap: var(--s-3); } .also .device { grid-column: 1 / -1; max-width: 300px; margin-top: var(--s-3); } }
 @media (max-width: 560px) { .figs { grid-template-columns: 1fr 1fr; } }
 
 /* ---------- Erklärgrafiken ---------- */
@@ -253,11 +255,10 @@ details.more[open] > summary { margin-bottom: var(--s-3); }
 /* ---------- Zweispalter ---------- */
 .split { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: var(--s-5); align-items: start; }
 .split--rev { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
-.split--aside { grid-template-columns: minmax(0, 560px) minmax(0, 240px); justify-content: start; gap: var(--s-6); }
-.split--aside .device--minor { max-width: 240px; }
+.split--aside { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
 .split + .split, .notice + .split { margin-top: var(--s-6); }
 @media (max-width: 960px) { .split, .split--rev { grid-template-columns: 1fr; } }
-@media (max-width: 640px) { .split--aside { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .split--aside { grid-template-columns: 1fr; } }
 
 .rows { list-style: none; margin: 0; padding: 0; }
 .rows > li, .rows > div { padding: 16px 0; border-top: 1px solid var(--line); color: var(--text-2); }
@@ -355,7 +356,7 @@ html.reveal .rv.is-in { opacity: 1; transform: none; }
   html.reveal .rv { opacity: 1; transform: none; }
   .step { opacity: 1; }
   .scrolly__steps::before { display: none; }
-  .scrolly__stage .device, .panel__media img, .panel__media video { transform: none !important; }
+  .hero__device .device, .scrolly__stage .device, .panel__media img, .panel__media video { transform: none !important; }
 }
 
 @media (min-width: 2200px) { :root { --maxw: 1720px; } }

@@ -1,7 +1,8 @@
 /* seaFOX – Seitenlogik. Vanilla JS, keine Bibliothek, keine Netzwerkanfragen außer lokalen Medien.
    Bewegung (nur transform und opacity, Kurve und Dauern aus css/site.css):
    - Blöcke blenden beim ersten Erscheinen einmal ein, innerhalb einer Gruppe gestaffelt
-   - Tablet, dessen Bildschirm dem Text folgt (Überblenden zwischen ECHTEN Aufnahmen, nichts wird verformt);
+   - Hero-Tablet ist leicht gekippt und richtet sich beim Scrollen auf; das Dashboard-Tablet dreht sich um wenige Grad
+   - Tablet, dessen Bildschirm dem Text folgt (Überblenden zwischen ECHTEN Aufnahmen);
      eine schmale Linie neben den Schritten zeigt den Fortschritt
    - Stimmungsbilder in „Für wen“ setzen sich beim Hereinscrollen (Maßstab 1,06 auf 1)
    - Erklärgrafiken, die kurz laufen und dann stehen bleiben (viz.js)
@@ -97,11 +98,15 @@
   }
   function choreo(y, vh) {
     if (still()) return;
-    if (scrolly && dashDevice && window.innerWidth > 960) {     // setzt sich beim Hereinscrollen: gleichmäßiger Maßstab, keine Drehung
-      var r = scrolly.getBoundingClientRect();
-      var enter = clamp01((vh * 0.95 - r.top) / (vh * 0.6)), e3 = 1 - Math.pow(1 - enter, 3);
-      dashDevice.style.transform = enter < 1 ? 'translate3d(0,' + ((1 - e3) * 28).toFixed(1) + 'px,0) scale(' + (0.96 + e3 * 0.04).toFixed(4) + ')' : '';
-    } else if (dashDevice && dashDevice.style.transform) { dashDevice.style.transform = ''; }
+    if (heroDevice && y < vh) {           // Tablet richtet sich beim ersten Scrollen auf
+      var hp = y / vh;
+      heroDevice.style.transform = 'rotateX(' + (5 - hp * 5).toFixed(2) + 'deg) rotateY(' + (-7 + hp * 7).toFixed(2) + 'deg)';
+    }
+    if (scrolly && dashDevice && window.innerWidth > 960) {     // steigt auf und dreht sich um wenige Grad
+      var r = scrolly.getBoundingClientRect(), p = Math.min(1, Math.max(0, (vh - r.top) / (r.height + vh)));
+      var enter = Math.min(1, Math.max(0, (vh * 0.9 - r.top) / (vh * 0.7)));
+      dashDevice.style.transform = 'translate3d(0,' + ((1 - enter) * 60).toFixed(1) + 'px,0) rotateY(' + (5 - p * 10).toFixed(2) + 'deg)';
+    } else if (dashDevice) { dashDevice.style.transform = ''; }
     if (stepsBox) {                                              // Fortschrittslinie neben den Schritten
       var sr = stepsBox.getBoundingClientRect();
       stepsBox.style.setProperty('--p', clamp01((vh * 0.5 - sr.top) / Math.max(1, sr.height)).toFixed(4));
@@ -130,7 +135,7 @@
     var played = false;
     new IntersectionObserver(function (es) { if (es[0].isIntersecting && !played) { played = true; arm(v); play(v); } }, { threshold: 0.5 }).observe(v);
   });
-  if (reduce.addEventListener) reduce.addEventListener('change', function () { if (reduce.matches) { $$('video').forEach(function (v) { v.pause(); }); panels.forEach(function (el) { el.style.removeProperty('--pp'); }); if (stepsBox) stepsBox.style.removeProperty('--p'); } });
+  if (reduce.addEventListener) reduce.addEventListener('change', function () { if (reduce.matches) { if (heroDevice) heroDevice.style.transform = ''; if (dashDevice) dashDevice.style.transform = ''; $$('video').forEach(function (v) { v.pause(); }); panels.forEach(function (el) { el.style.removeProperty('--pp'); }); if (stepsBox) stepsBox.style.removeProperty('--p'); } });
 
   /* ---------- Beta-Formular: sendet nichts, öffnet nur einen lokalen E-Mail-Entwurf ---------- */
   var form = $('#betaForm');
