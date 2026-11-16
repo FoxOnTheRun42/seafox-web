@@ -25,6 +25,7 @@
   font-variant-numeric: tabular-nums;
   overflow: hidden;
   isolation: isolate;
+  container-type: inline-size;
 }
 .instrument-preview[data-preview-theme="day"] {
   --ip-canvas: #e6ecef;
@@ -138,7 +139,7 @@
 .instrument-preview .ip-trace .ip-baseline { stroke: var(--ip-line); }
 .instrument-preview .ip-trace .ip-trace-line { stroke: var(--ip-accent); stroke-width: 2; fill: none; vector-effect: non-scaling-stroke; }
 .instrument-preview .ip-wind-area { display: grid; grid-template-columns: minmax(0, 1fr) minmax(100px, .75fr); align-items: center; gap: 10px; flex: 1; padding-block: 12px 6px; }
-.instrument-preview .ip-wind-readout .ip-reading { font-size: clamp(44px, 6.3vw, 66px); }
+.instrument-preview .ip-wind-readout .ip-reading { font-size: clamp(40px, 4.5vw, 52px); }
 .instrument-preview .ip-wind-readout p { color: var(--ip-secondary); font-size: 12px; margin-top: 7px; }
 .instrument-preview .ip-dial { display: block; width: 100%; max-width: 176px; margin: auto; overflow: visible; }
 .instrument-preview .ip-dial-rim, .instrument-preview .ip-dial-ticks { fill: none; stroke: var(--ip-tertiary); }
@@ -185,4 +186,11 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .instrument-preview *, .instrument-preview *::before, .instrument-preview *::after { transition: none !important; }
+}
+
+/* The preview can sit in a narrow desktop column as well as on a phone. */
+@container (max-width: 540px) {
+  .instrument-preview .ip-wind-area { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .instrument-preview .ip-wind-readout { text-align: center; }
+  .instrument-preview .ip-dial { max-width: 100px; }
 }
